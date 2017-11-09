@@ -4,12 +4,13 @@
     ".git",
     "node_modules/**/node_modules"
   ],
-  "verbose": true,
+  "verbose": false,
   "execMap": {
     "ts": "node_modules/.bin/ts-node"
   },
   "watch": [
-    "lib/**/*.ts"
+    "lib/*.ts",
+    "index.ts"
   ],
   "ext": "ts"
 }
