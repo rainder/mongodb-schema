@@ -11,7 +11,7 @@ import { createConnection } from '@rainder/mongodb-schema';
 export const connection = createConnection('mongodb://127.0.0.1:27017');
 ```
 
-##### model.ts
+##### user.model.ts
 
 ```typescript
 import { BaseModel, Model, Schema, ObjectId } from '@rainder/mongodb-schema';
@@ -33,8 +33,8 @@ export interface UserSchema extends Schema {
   }],
 })
 export class User extends BaseModel<UserSchema> {
-  hi() {
-    console.log(this);
+  logMe() {
+    console.log(this.doc);
   }
 }
 
@@ -43,6 +43,9 @@ export class User extends BaseModel<UserSchema> {
 ##### index.ts
 
 ```typescript
+import { ObjectId } from '@rainder/mongodb-schema';
+import { User } from './user.model';
+
 const user = new User({
   name: 'John',
   email: 'john@smith.com',
@@ -56,7 +59,19 @@ user.save().then(() => {
 User
   .find({ email: 'john@smith.com' })
   .then((cursor) => cursor.toArray())
-  .then((users) => {
+  .then((users: User[]) => {
     console.log(users)
   });
+
+User.findOneAndUpdate({
+  _id: new ObjectId('000000000000000000000001'),
+}, {
+  $set: {
+    name: 'Andy',
+  }
+}, {
+  returnOriginal: false, 
+}).then((user) => {
+  user.logMe();
+});
 ```

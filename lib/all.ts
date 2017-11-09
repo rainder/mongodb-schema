@@ -48,8 +48,9 @@ export class BaseModel<T> {
   static props: ModelProps;
 
   constructor(doc: T) {
+    this.doc = doc;
+
     if (doc) {
-      this.doc = doc;
       this.state.isNew = !this.doc._id;
       this.doc._id = this.doc._id || new ObjectId();
     }
