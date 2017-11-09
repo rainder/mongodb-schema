@@ -6,6 +6,14 @@ export interface IUpdateOptions {
   collation?: any;
 }
 
+export interface IFindOneAndUpdateOptions {
+  projection?: any;
+  sort?: any;
+  returnOriginal?: boolean;
+  maxTimeMS?: number;
+  upsert?: boolean;
+}
+
 export interface IConditions {
   [key: string]: any;
 }

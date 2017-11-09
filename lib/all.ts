@@ -1,7 +1,10 @@
 import * as mongodb from 'mongodb';
 import { CollectionAggregationOptions, Db, ObjectId } from 'mongodb';
 import { MongoDBSchemaError } from './lib-error';
-import { IConditions, IIndexSpec, IModelDecorator, IUpdateOptions, IUpdate, Schema, IPipeline } from './interfaces';
+import {
+  IConditions, IIndexSpec, IModelDecorator, IUpdateOptions, IUpdate, Schema, IPipeline,
+  IFindOneAndUpdateOptions
+} from './interfaces';
 import { getCollection } from './connection';
 
 export { ObjectId };
@@ -45,25 +48,28 @@ export class BaseModel<T> {
   static props: ModelProps;
 
   constructor(doc: T) {
-    this.doc = doc;
-    this.state.isNew = !this.doc._id;
-    this.doc._id = this.doc._id || new ObjectId();
+    if (doc) {
+      this.doc = doc;
+      this.state.isNew = !this.doc._id;
+      this.doc._id = this.doc._id || new ObjectId();
+    }
   }
 
   /**
    *
    * @param {IConditions} conditions
    * @param {IUpdate} update
-   * @param {IUpdateOptions} options
+   * @param {IFindOneAndUpdateOptions} options
    * @returns {Promise<T>}
    */
-  static findOneAndUpdate<T>(this: StaticThis<T>, conditions: IConditions, update: IUpdate, options?: IUpdateOptions): Promise<T> {
+  static findOneAndUpdate<T>(this: StaticThis<T>, conditions: IConditions, update: IUpdate, options?: IFindOneAndUpdateOptions): Promise<T> {
     const props = <ModelProps>(<any>this).props;
     const collectionName = props.collection_name;
 
     return getCollection(props.connection, collectionName).then((collection) => {
       return new Promise<T>((resolve, reject) => {
         collection.findOneAndUpdate(conditions, update, options, (err, result) => {
+          console.log('>>>', result);
           const record: BaseModel<any> = <any>(result ? new this(result.value) : null);
 
           if (result) {
