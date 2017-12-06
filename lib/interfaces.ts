@@ -60,7 +60,7 @@ export interface IPipeline {
   $project?: { [key: string]: any };
   $match?: { [key: string]: any };
   $redact?: { [key: string]: any };
-  $limit?: { [key: string]: any };
+  $limit?: number;
   $skip?: { [key: string]: any };
   $unwind?: { [key: string]: any };
   $group?: {
