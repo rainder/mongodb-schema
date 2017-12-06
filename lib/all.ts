@@ -3,7 +3,7 @@ import { CollectionAggregationOptions, Db, ObjectId } from 'mongodb';
 import { MongoDBSchemaError } from './lib-error';
 import {
   IConditions, IIndexSpec, IModelDecorator, IUpdateOptions, IUpdate, Schema, IPipeline,
-  IFindOneAndUpdateOptions
+  IFindOneAndUpdateOptions, IInsertOneResult, IInsertManyResult
 } from './interfaces';
 import { getCollection } from './connection';
 
@@ -202,6 +202,34 @@ export class BaseModel<T> {
       cursor.map((doc: any) => new this(doc));
 
       return cursor;
+    });
+  }
+
+  /**
+   *
+   * @param {T} spec
+   * @returns {Promise<IInsertOneResult>}
+   */
+  static insertOne<T>(this: StaticThis<T>, spec: T): Promise<IInsertOneResult> {
+    const props = <ModelProps>(<any>this).props;
+    const collectionName = props.collection_name;
+
+    return getCollection(props.connection, collectionName).then((collection) => {
+      return collection.insertOne(spec);
+    });
+  }
+
+  /**
+   *
+   * @param {T[]} spec
+   * @returns {Promise<IInsertManyResult>}
+   */
+  static insertMany<T>(this: StaticThis<T>, spec: T[]): Promise<IInsertManyResult> {
+    const props = <ModelProps>(<any>this).props;
+    const collectionName = props.collection_name;
+
+    return getCollection(props.connection, collectionName).then((collection) => {
+      return collection.insertMany(spec);
     });
   }
 

@@ -1,4 +1,5 @@
 import { Db } from 'mongodb';
+import { ObjectId } from './all';
 
 export interface IUpdateOptions {
   upsert?: boolean;
@@ -105,4 +106,24 @@ export interface IModelDecorator {
   connection: Promise<Db>;
   collection_name: string;
   indexes?: IIndexSpec[];
+}
+
+export interface IInsertOneResult {
+  result: {
+    ok: number;
+    n: number;
+  };
+  ops: { _id: ObjectId }[];
+  insertedCount: number;
+  insertedId: ObjectId;
+}
+
+export interface IInsertManyResult {
+  result: {
+    ok: number;
+    n: number;
+  };
+  ops: { _id: ObjectId }[];
+  insertedCount: number;
+  insertedIds: ObjectId[];
 }
