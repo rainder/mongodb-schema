@@ -193,10 +193,9 @@ export class BaseModel<T> {
    * @returns {Promise<Cursor>}
    */
   static find<T>(this: StaticThis<T>, conditions: IConditions): Promise<mongodb.Cursor> {
-    const props = <ModelProps>(<any>this).props;
-    const collectionName = props.collection_name;
+    const { connection, collection_name } = <ModelProps>(<any>this).props;
 
-    return getCollection(props.connection, collectionName).then((collection) => {
+    return getCollection(connection, collection_name).then((collection) => {
       const cursor = collection.find(conditions);
 
       cursor.map((doc: any) => new this(doc));
@@ -207,29 +206,27 @@ export class BaseModel<T> {
 
   /**
    *
-   * @param {T} spec
+   * @param {T} doc
    * @returns {Promise<IInsertOneResult>}
    */
-  static insertOne<T>(this: StaticThis<T>, spec: T): Promise<IInsertOneResult> {
-    const props = <ModelProps>(<any>this).props;
-    const collectionName = props.collection_name;
+  static insertOne<T>(doc: T): Promise<IInsertOneResult> {
+    const { connection, collection_name } = this.props;
 
-    return getCollection(props.connection, collectionName).then((collection) => {
-      return collection.insertOne(spec);
+    return getCollection(connection, collection_name).then((collection) => {
+      return collection.insertOne(doc);
     });
   }
 
   /**
    *
-   * @param {T[]} spec
+   * @param {T[]} doc
    * @returns {Promise<IInsertManyResult>}
    */
-  static insertMany<T>(this: StaticThis<T>, spec: T[]): Promise<IInsertManyResult> {
-    const props = <ModelProps>(<any>this).props;
-    const collectionName = props.collection_name;
+  static insertMany<T>(doc: T[]): Promise<IInsertManyResult> {
+    const { connection, collection_name } = this.props;
 
-    return getCollection(props.connection, collectionName).then((collection) => {
-      return collection.insertMany(spec);
+    return getCollection(connection, collection_name).then((collection) => {
+      return collection.insertMany(doc);
     });
   }
 
