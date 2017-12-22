@@ -70,7 +70,6 @@ export class BaseModel<T> {
     return getCollection(props.connection, collectionName).then((collection) => {
       return new Promise<T>((resolve, reject) => {
         collection.findOneAndUpdate(conditions, update, options, (err, result) => {
-          console.log('>>>', result);
           const record: BaseModel<any> = <any>(result ? new this(result.value) : null);
 
           if (result) {
